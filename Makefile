@@ -4,8 +4,11 @@ REBAR := $(shell which rebar || echo ./rebar)
 
 all: compile test
 
-compile:
+compile: deps
 	@$(REBAR) compile
+
+deps:
+	@$(REBAR) get-deps
 
 test: eunit
 
