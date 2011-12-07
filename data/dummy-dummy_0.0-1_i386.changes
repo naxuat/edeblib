@@ -1,0 +1,39 @@
+Format: 1.8
+Date: Mon, 28 Nov 2011 19:27:46 +0200
+Source: dummy-dummy
+Binary: dummy-dummy-dev dummy-dummy1 dummy-dummy-doc
+Architecture: source i386 all
+Version: 0.0-1
+Distribution: unstable
+Urgency: low
+Maintainer: Mikhail Sobolev <mss@mawhrin.net>
+Changed-By: Mikhail Sobolev <mss@mawhrin.net>
+Description: 
+ dummy-dummy-dev - dummy package for testing purposes (dev)
+ dummy-dummy-doc - dummy package for testing purposes (doc)
+ dummy-dummy1 - dummy package for testing purposes
+Changes: 
+ dummy-dummy (0.0-1) unstable; urgency=low
+ .
+   * Initial release
+Checksums-Sha1: 
+ 43f7898de1c0c23cbfa5c9d7154159b4202c6c10 770 dummy-dummy_0.0-1.dsc
+ afdcd8308b9dfc12378b8b30ad296f7d565e2588 106 dummy-dummy_0.0.orig.tar.gz
+ 8bccaa1a24db333fed2cbba6e9d2464125911aec 2245 dummy-dummy_0.0-1.debian.tar.gz
+ d1d1077db85681620743c37467839bf685289ac9 2100 dummy-dummy-dev_0.0-1_i386.deb
+ eeb085d13e858996bb89905c691838a89ef949b1 1920 dummy-dummy1_0.0-1_i386.deb
+ 917351348d9bc36d6215f4cd391b1f4d7519cf7c 1906 dummy-dummy-doc_0.0-1_all.deb
+Checksums-Sha256: 
+ 47022909e95c6df6fd44579b5f6043ce67c537fa80ae721f47c917d4be7337e6 770 dummy-dummy_0.0-1.dsc
+ 33e0dac95397059a3d1ea4c28d0a444480498f28588b26a61f4f2e867c2ffa02 106 dummy-dummy_0.0.orig.tar.gz
+ d92fc6cd322e73628a3617d2ff1ac71d003a35487284d5cf6c8e92a6b5e80421 2245 dummy-dummy_0.0-1.debian.tar.gz
+ 1f68e01e8bd26f4a854b78d5dbb9e9b769748ae32c5a3c98cc8ee6f448ceec51 2100 dummy-dummy-dev_0.0-1_i386.deb
+ b0a9219c911db293563d31dd43631857efd9e02511d88c004c83f28328d5b31a 1920 dummy-dummy1_0.0-1_i386.deb
+ aea202bca87546c6b844f51b40ae4b8517994b305db9944a7bdf2bb34e65f259 1906 dummy-dummy-doc_0.0-1_all.deb
+Files: 
+ bb95847cca66ccc971d3463c30eff3b8 770 libs extra dummy-dummy_0.0-1.dsc
+ 226d0c890f80d4747f6f97c0aa999865 106 libs extra dummy-dummy_0.0.orig.tar.gz
+ e29a2274a020a4c9f26c6ee414e658d2 2245 libs extra dummy-dummy_0.0-1.debian.tar.gz
+ ee1248688c889ce36b46a47a4c58a0ef 2100 libdevel extra dummy-dummy-dev_0.0-1_i386.deb
+ f9ef6b90d0b02b173772905d21dc3781 1920 libs extra dummy-dummy1_0.0-1_i386.deb
+ a9912c428daf29f009cea67f893a57af 1906 doc extra dummy-dummy-doc_0.0-1_all.deb
