@@ -46,7 +46,7 @@
 -opaque version() :: #debian_version{}.
 
 -export_type([
-    debian_version/0
+    version/0
 ]).
 
 new(Epoch, Upstream, Revision) when is_integer(Epoch), is_binary(Upstream), is_binary(Revision) ->
