@@ -25,7 +25,7 @@
 
 {application, edeblib, [
     {description, "Erlang module to work with Debian packages"},
-    {vsn, "1.0.1"},
+    {vsn, "1.0.2"},
     {registered, []},
     {applications, [
         kernel,
