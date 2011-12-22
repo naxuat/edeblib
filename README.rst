@@ -2,11 +2,11 @@
 edeblib -- a library to work with Debian files
 ==============================================
 
-`trevis-ci status`_: |ci-status|
+`travis-ci status`_: |ci-status|
 
 .. |ci-status| image:: https://secure.travis-ci.org/sa2ajj/edeblib.png?branch=master
 
-.. _trevis-ci status: http://travis-ci.org/#!/sa2ajj/edeblib
+.. _travis-ci status: http://travis-ci.org/#!/sa2ajj/edeblib
 
 .. contents::
 
