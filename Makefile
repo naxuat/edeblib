@@ -13,7 +13,7 @@ deps:
 test: eunit
 
 eunit: compile
-	@$(REBAR) eunit
+	@$(REBAR) skip_deps=true eunit
 
 xref: compile
 	@$(REBAR) xref
