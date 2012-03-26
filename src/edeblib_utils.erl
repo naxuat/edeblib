@@ -179,21 +179,17 @@ first_cap(Value) ->
 
 file_info(FileName) ->
     {ok, Device} = file:open(FileName, [read, raw, binary]),
-    {Size, MD5, SHA1} = file_info(Device, ?BLOCK_SIZE, crypto:md5_init(), crypto:sha_init(), 0),
+    Result = file_info(Device, ?BLOCK_SIZE, edeblib_sums:new()),
     file:close(Device),
-    [
-        {md5, MD5},
-        {sha1, SHA1},
-        {size, Size}
-    ].
+    Result.
 
-file_info(Device, BlockSize, MD5, SHA1, Size) ->
+file_info(Device, BlockSize, Context) ->
     case file:read(Device, BlockSize) of
         {ok, Data} ->
-            file_info(Device, BlockSize, crypto:md5_update(MD5, Data), crypto:sha_update(SHA1, Data), Size + byte_size(Data));
+            file_info(Device, BlockSize, edeblib_sums:update(Context, Data));
 
         eof ->
-            {Size, crypto:md5_final(MD5), crypto:sha_final(SHA1)}
+            edeblib_sums:final(Context)
     end.
 
 -spec default_props() -> Result when
