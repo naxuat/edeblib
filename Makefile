@@ -4,6 +4,9 @@ REBAR := $(shell which rebar || echo ./rebar)
 
 all: compile test
 
+erl: compile
+	erl -pa ebin deps/*/ebin
+
 compile: deps
 	@$(REBAR) compile
 
@@ -17,3 +20,6 @@ eunit: compile
 
 xref: compile
 	@$(REBAR) xref
+
+clean:
+	@$(REBAR) clean
