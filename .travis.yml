@@ -8,6 +8,5 @@ script: "make"
 branches:
     only:
         - master
-        - sha256-support
 notifications:
   email: false
