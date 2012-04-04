@@ -1,4 +1,4 @@
-.PHONY: test eunit xref
+.PHONY: test eunit xref deps
 
 REBAR := $(shell which rebar || echo ./rebar)
 
