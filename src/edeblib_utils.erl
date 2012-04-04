@@ -35,8 +35,6 @@
 -export([
     name_version/2,
     format_to_bin/2,
-    format_hash/2,
-    parse_hash/2,
     join/2,
     split_line/1,
     split_line/2,
@@ -44,7 +42,6 @@
     compare/2,
     rstrip/1,
     first_cap/1,
-    file_info/1,
     default_props/0,
     check_props/2,
     check_props/3
@@ -105,20 +102,6 @@ name_version(binary, Props) ->
 format_to_bin(Format, Data) ->
     list_to_binary(io_lib:format(Format, Data)).
 
-format_hash(Hash, md5) ->
-    <<MD5:128/big-unsigned-integer>> = Hash,
-    format_to_bin(?MD5_FORMAT, [MD5]);
-format_hash(Hash, sha1) ->
-    <<SHA1:160/big-unsigned-integer>> = Hash,
-    format_to_bin(?SHA1_FORMAT, [SHA1]).
-
-parse_hash(Hash, md5) when is_binary(Hash), byte_size(Hash) == 32 ->
-    {ok, [MD5], []} = io_lib:fread("~16u", binary_to_list(Hash)),
-    <<MD5:128/big-unsigned-integer>>;
-parse_hash(Hash, sha1) when is_binary(Hash), byte_size(Hash) == 40 ->
-    {ok, [SHA1], []} = io_lib:fread("~16u", binary_to_list(Hash)),
-    <<SHA1:160/big-unsigned-integer>>.
-
 join([Value], _) ->
     Value;
 join([_ | _]=Parts, Sep) ->
@@ -176,21 +159,6 @@ first_cap(<<X, Rest/binary>>) when X >= $a, X =< $z ->
     <<(X-32), Rest/binary>>;
 first_cap(Value) ->
     Value.
-
-file_info(FileName) ->
-    {ok, Device} = file:open(FileName, [read, raw, binary]),
-    Result = file_info(Device, ?BLOCK_SIZE, edeblib_sums:new()),
-    file:close(Device),
-    Result.
-
-file_info(Device, BlockSize, Context) ->
-    case file:read(Device, BlockSize) of
-        {ok, Data} ->
-            file_info(Device, BlockSize, edeblib_sums:update(Context, Data));
-
-        eof ->
-            edeblib_sums:final(Context)
-    end.
 
 -spec default_props() -> Result when
     Result :: [atom()].
@@ -315,14 +283,6 @@ check_props_test() ->
     ?assertEqual(ok, check_props(NoMD5, FileInfo, [sha1, size])),
     BadMD5 = lists:keyreplace(md5, 1, FileInfo, {md5, <<"bad-bad-bad">>}),
     ?assertMatch({error,mismatch,{md5, _, _}}, check_props(FileInfo, BadMD5, default_props())).
-
-format_hash_test_() ->
-    MD5 = <<197,109,186,109,175,244,61,2,70,52,250,214,23,72,239,156>>,
-    SHA1 = <<180,33,100,219,103,33,14,21,200,207,152,52,86,32,11,199,32,223,63,120>>,
-    {"format_hash simple tests", [
-        ?_assertEqual(MD5, parse_hash(format_hash(MD5, md5), md5)),
-        ?_assertEqual(SHA1, parse_hash(format_hash(SHA1, sha1), sha1))
-    ]}.
 -endif.
 
 % vim:sw=4:ts=4:et:ai

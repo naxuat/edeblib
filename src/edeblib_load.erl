@@ -61,7 +61,7 @@ load_changes(FileName) when is_binary(FileName);
     end.
 
 load_source(FileName) when is_binary(FileName) ->
-    load_source(FileName, {filename:basename(FileName), edeblib_utils:file_info(FileName)});
+    load_source(FileName, {filename:basename(FileName), esums_file:calc(FileName)});
 load_source(FileName) when is_list(FileName) ->
     load_source(list_to_binary(FileName)).
 
@@ -83,7 +83,7 @@ load_source(FileName, FileEntry) ->
     end.
 
 load_binary(FileName) when is_binary(FileName) ->
-    load_binary(FileName, {filename:basename(FileName), edeblib_utils:file_info(FileName)});
+    load_binary(FileName, {filename:basename(FileName), esums_file:calc(FileName)});
 load_binary(FileName) when is_list(FileName) ->
     load_binary(list_to_binary(FileName)).
 
@@ -130,7 +130,7 @@ load(FileName) when is_list(FileName) ->
 
 check(DirName, {FileName, Props}) ->
     FullName = filename:join(DirName, FileName),
-    ActualProps = edeblib_utils:file_info(FullName),
+    ActualProps = esums_file:calc(FullName),
     case edeblib_utils:check_props(ActualProps, Props) of
         ok ->
             {ok, type(FileName), ActualProps};
@@ -173,7 +173,7 @@ files_to_props([Line | Rest], Files) ->
         [_, _, _]=Info ->
             Info
     end,
-    files_to_props(Rest, [{Name, [{size, edeblib_utils:to_integer(Size)}, {md5, edeblib_utils:parse_hash(MD5, md5)}]} | Files]);
+    files_to_props(Rest, [{Name, [{size, edeblib_utils:to_integer(Size)}, {md5, esums:parse(md5, MD5)}]} | Files]);
 files_to_props([], Files) ->
     Files.
 
@@ -202,7 +202,7 @@ sums_to_props([Line | Rest], Files, Key) ->
     [Sum, _, Name] = edeblib_utils:split_line(Line),
     sums_to_props(Rest, case lists:keytake(Name, 1, Files) of
         {value, {_, Props}, OtherFiles} ->
-            [{Name, [{Key, edeblib_utils:parse_hash(Sum, Key)} | Props]} | OtherFiles];
+            [{Name, [{Key, esums:parse(Key, Sum)} | Props]} | OtherFiles];
 
         false ->
             Files
