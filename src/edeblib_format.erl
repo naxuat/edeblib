@@ -102,14 +102,8 @@ format_section([{Key, Header, Flag, Kind} | Rest], Props, Output, UnhandledFun) 
                     format_section(Rest, Props, Output, UnhandledFun)
             end
     end;
-format_section([]=Empty, [Prop | Rest], Output, UnhandledFun) ->
-    case UnhandledFun(Prop) of
-        {ok, Data} ->
-            format_section(Empty, Rest, <<Output/binary, Data/binary>>, UnhandledFun);
-
-        ignore ->
-            format_section(Empty, Rest, Output, UnhandledFun)
-    end;
+format_section([], [_ | _]=Unhandled, Output, UnhandledFun) ->
+    <<Output/binary, (UnhandledFun(Unhandled))/binary>>;
 format_section([], _, Output, _) ->
     Output.
 
@@ -162,15 +156,30 @@ headers(binary) ->
 headers(release) ->
     release_headers().
 
--spec ignore_unknown({atom(), term()}) -> 'ignore'.
+format_unknown(Unhandled) ->
+    format_unknown(Unhandled, <<>>).
 
-ignore_unknown({_, _}) ->
-    ignore.
+% -spec format_unknown({atom(), term()}) -> {'ok', binary()}.
 
--spec format_unknown({atom(), term()}) -> {'ok', binary()}.
+format_unknown([{Key, Value} | Rest], Output) ->
+    format_unknown(Rest, <<Output/binary, (format_header(atom_to_header(Key), Value, wrap))/binary>>);
+format_unknown([], Output) ->
+    Output.
 
-format_unknown({Key, Value}) ->
-    {ok, format_header(atom_to_header(Key), Value, wrap)}.
+
+%   case UnhandledFun(Prop) of
+%       {ok, Data} ->
+%           format_section(Empty, Rest, <<Output/binary, Data/binary>>, UnhandledFun);
+
+%       ignore ->
+%           format_section(Empty, Rest, Output, UnhandledFun)
+%   end;
+
+-spec ignore_unknown(Unhandled) -> <<>> when
+    Unhandled :: list(term()).
+
+ignore_unknown(_) ->
+    <<>>.
 
 -spec atom_to_header(Atom) -> Result when
     Atom :: atom(),
