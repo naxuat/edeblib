@@ -50,7 +50,7 @@
     atom_to_header/1
 ]).
 
--type section_kind() :: 'source' | 'binary' | 'release'.
+-type section_kind() :: 'source' | 'binary' | 'release' | 'source_files' | 'binary_file'.
 -type header_kind() :: 'mandatory' | 'optional'.
 -type header_format_kind() :: 'flatten' | 'wrap' | 'files'.
 -type header_type() :: {atom(), binary(), header_kind(), header_format_kind()}.
@@ -154,7 +154,11 @@ headers(source) ->
 headers(binary) ->
     binary_index_headers();
 headers(release) ->
-    release_headers().
+    release_headers();
+headers(source_files) ->
+    source_files_headers();
+headers(binary_file) ->
+    binary_file_headers().
 
 format_unknown(Unhandled) ->
     format_unknown(Unhandled, <<>>).
@@ -272,6 +276,29 @@ release_headers() ->
         {sha256, <<"SHA256">>, optional, files}
     ].
 
+-spec source_files_headers() -> Result when
+    Result :: [header_type()].
+
+source_files_headers() ->
+    [
+        {directory, <<"Directory">>, mandatory, flatten},
+        {files, <<"Files">>, mandatory, files},
+        {sha1, <<"Checksums-Sha1">>, mandatory, files},
+        {sha256, <<"Checksums-Sha256">>, optional, files}
+    ].
+
+-spec binary_file_headers() -> Result when
+    Result :: [header_type()].
+
+binary_file_headers() ->
+    [
+        {filename, <<"Filename">>, mandatory, flatten},
+        {size, <<"Size">>, mandatory, flatten},
+        {md5sum, <<"MD5Sum">>, mandatory, flatten},
+        {sha1, <<"SHA1">>, mandatory, flatten},
+        {sha256, <<"SHA256">>, optional, flatten}
+    ].
+
 % }}}
 
 -ifdef(TEST).
@@ -314,7 +341,9 @@ headers_test_() ->
     {"Simple check for headers/1 helper", [
         ?_assertEqual(source_index_headers(), headers(source)),
         ?_assertEqual(binary_index_headers(), headers(binary)),
-        ?_assertEqual(release_headers(), headers(release))
+        ?_assertEqual(release_headers(), headers(release)),
+        ?_assertEqual(source_files_headers(), headers(source_files)),
+        ?_assertEqual(binary_file_headers(), headers(binary_file))
     ]}.
 -endif.
 
